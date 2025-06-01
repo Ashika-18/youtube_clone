@@ -3,15 +3,17 @@ import { Pool } from 'pg';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import { PrismaClient } from './generated/prisma';
 
+const prisma = new PrismaClient();
 const app = express();
 const port = 3000;
 
 //PostgreSQL接続設定
 const pool = new Pool({
-    user: 'your_username',
+    user: 'ashika',
     host: 'localhost',
-    database: 'your_database',
+    database: 'ashika',
     password: 'your_password',
     port: 5432,
 });
@@ -42,19 +44,24 @@ app.get('/', (req: Request, res: Response) => {
 //動画アップロードのエンドポイント
 app.post('/upload', upload.single('video'), (async (req: Request, res: Response): Promise<Response | undefined> => {
     if (!req.file) {
-        res.status(400).send('No video file uploaded.');
-        return;
+       return res.status(400).send('No video file uploaded.');
     }
     const { title, description } = req.body;
     const filePath = req.file.path;
     const originalname = req.file.originalname;
 
     try {
-        const result = await pool.query(
-            'INSERT INTO videos (title, description, file_path, original_name, upload_date) VALUES ($1, $2, $3, $4, NOW()) RETURNING id',
-            [title, description, filePath, originalname] 
-        );
-        return res.status(201).json({ message: 'Video uploaded successfully!', videoId: result.rows[0].id });
+        const videoData = {
+            title: title as string,
+            description: req.body.description === undefined ? null : req.body.description as string,
+            file_path: filePath,
+            original_name: originalname,
+            upload_date: new Date(),
+        };
+        const video = await prisma.video.create({
+            data: videoData,
+        })
+        return res.status(201).json({ message: 'Video uploaded successfully!', videoId: video.id });
     } catch (error) {
         console.error('Error uploading video:', error);
         return res.status(500).send('Error uploading video to database.');
