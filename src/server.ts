@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction, RequestHandler } from 'express';
+import express from 'express';
 import { Pool } from 'pg';
 import multer from 'multer';
 import fs from 'fs';
@@ -20,14 +20,15 @@ const pool = new Pool({
 
 //Multerの設定
 const storage = multer.diskStorage({
-    destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
-        cb(null, 'uploads/');
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/');
     },
-    filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    },
+  });
+  
 
 const upload = multer({ storage: storage });
 
@@ -37,14 +38,15 @@ app.use(express.json());
 // 静的ファイルを提供するためのミドルウェア
 app.use(express.static('public'));
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req: express.Request, res: express.Response) => {
     res.send('YouTube Clone!');
 });
 
-//動画アップロードのエンドポイント
-app.post('/upload', upload.single('video'), (async (req: Request, res: Response): Promise<Response | undefined> => {
+//動画アップロードのエンドポイント (Prisma版)
+app.post('/upload', upload.single('video'), (async (req: express.Request, res: express.Response) => {
     if (!req.file) {
-       return res.status(400).send('No video file uploaded.');
+        res.status(400).send('No video file uploaded.');
+        return;
     }
     const { title, description } = req.body;
     const filePath = req.file.path;
@@ -60,13 +62,30 @@ app.post('/upload', upload.single('video'), (async (req: Request, res: Response)
         };
         const video = await prisma.video.create({
             data: videoData,
-        })
-        return res.status(201).json({ message: 'Video uploaded successfully!', videoId: video.id });
+        });
+        res.status(201).json({ message: 'Video uploaded successfully!', videoId: video.id });
     } catch (error) {
         console.error('Error uploading video:', error);
-        return res.status(500).send('Error uploading video to database.');
+        res.status(500).send('Error uploading video to database.');
     }
-}) as RequestHandler);
+}) as express.RequestHandler);
+
+//動画リストを取得するエンドポイント (Prisma版)
+const getVideosHandler: express.RequestHandler = async (req, res) => {
+    try {
+        const videos = await prisma.video.findMany({
+            orderBy: {
+                upload_date: 'desc',
+            },
+        });
+        res.status(200).json(videos);
+    } catch (error) {
+        console.error('Error fetching videos', error);
+        res.status(500).send('Error fetching videos.');
+    }
+};
+
+app.get('/videos', getVideosHandler);
 
 //uploads ディレクトリが存在しない場合は作成
 const uploadDir = './uploads';
