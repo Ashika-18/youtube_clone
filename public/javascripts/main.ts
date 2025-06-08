@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const videoItem = document.createElement('div');
                 videoItem.classList.add('video_item');
 
+                videoItem.addEventListener('click', () => {
+                    //動画IDをURLパラメーターとしてvideo.html渡す
+                    window.location.href = `/video.html?id=${video.id}`;
+                });
+
                 const titleElement = document.createElement('h3');
                 titleElement.textContent = video.title;
 
@@ -94,4 +99,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     //ページ見込み時に動画リストをフェッチして表示
     fetchAndDisplayVideos();
+    console.log('main読み込みOK');
 })

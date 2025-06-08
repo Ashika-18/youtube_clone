@@ -76,4 +76,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         videoPlayerElement.style.display = 'none';
         videoDescriptionElement.style.display = 'none';
     }
+    console.log('video読み込みOK');
 });

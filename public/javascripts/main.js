@@ -72,6 +72,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         videos.forEach(function (video) {
                             var videoItem = document.createElement('div');
                             videoItem.classList.add('video_item');
+                            videoItem.addEventListener('click', function () {
+                                //動画IDをURLパラメーターとしてvideo.html渡す
+                                window.location.href = "/video.html?id=".concat(video.id);
+                            });
                             var titleElement = document.createElement('h3');
                             titleElement.textContent = video.title;
                             var videoPlayer = document.createElement('video');
@@ -148,4 +152,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     //ページ見込み時に動画リストをフェッチして表示
     fetchAndDisplayVideos();
+    console.log('main読み込みOK');
 });
