@@ -167,3 +167,43 @@ hr {
     margin-top: 0;
     margin-bottom: 0;
 }
+
+/* ここから video.html の動画プレーヤーに関するスタイル */
+
+/* main 要素でコンテンツの最大幅を制限し、中央に配置 */
+main {
+    max-width: 960px; /* 例えば、コンテンツの最大幅を960pxに設定 */
+    margin: 20px auto; /* 上下20px、左右autoで中央に配置 */
+    padding: 0 20px; /* 左右に少しパディングを追加 */
+}
+
+/* 動画プレーヤーのスタイル */
+#videoPlayer {
+    width: 100%; /* 親要素 (main) の幅いっぱいに広げる */
+    height: auto; /* アスペクト比を維持して高さを自動調整 */
+    max-height: 70vh; /* 例えば、ビューポートの高さの70%までに制限 */
+    display: block; /* 余分なマージンを防ぐ */
+    background-color: black; /* ロード中に黒背景 */
+    margin-bottom: 20px; /* 下に余白 */
+}
+
+/* タイトルや説明文のスタイル */
+#videoTitle {
+    font-size: 1.8em; /* フォントサイズを調整 */
+    margin-bottom: 10px;
+}
+
+#videoDescription {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #555;
+    white-space: pre-wrap; /* 改行を反映させる */
+}
+
+/* エラーメッセージのスタイル */
+#errorMessage {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* ここまで video.html の動画プレーヤーに関するスタイル */
