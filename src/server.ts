@@ -1,5 +1,4 @@
 import express from 'express';
-import { Pool } from 'pg';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
@@ -8,15 +7,6 @@ import { PrismaClient } from './generated/prisma';
 const prisma = new PrismaClient();
 const app = express();
 const port = 3000;
-
-//PostgreSQL接続設定
-const pool = new Pool({
-    user: 'ashika',
-    host: 'localhost',
-    database: 'ashika',
-    password: 'your_password',
-    port: 5432,
-});
 
 //Multerの設定
 const storage = multer.diskStorage({
@@ -37,6 +27,8 @@ app.use(express.json());
 
 // 静的ファイルを提供するためのミドルウェア
 app.use(express.static('public'));
+
+app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req: express.Request, res: express.Response) => {
     res.send('YouTube Clone!');
@@ -86,6 +78,31 @@ const getVideosHandler: express.RequestHandler = async (req, res) => {
 };
 
 app.get('/videos', getVideosHandler);
+
+//特定の動画を取得するエンドポイント
+app.get('/video/:id', (async(req: express.Request, res: express.Response) => {
+    const videoId = parseInt(req.params.id, 10);
+
+    if(isNaN(videoId)) {
+        return res.status(400).send('Invalid video ID.');
+    }
+    try {
+        const video = await prisma.video.findUnique({
+            where: {
+                id: videoId,
+            },
+        });
+
+        if (video) {
+            res.status(200).json(video);
+        } else {
+            res.status(404).send('Video not found.');
+        }
+    } catch (error) {
+        console.error(`Error fetching video with ID ${videoId}:`, error);
+        res.status(500).send('Error fetching video.');
+    }
+}) as express.RequestHandler);
 
 //uploads ディレクトリが存在しない場合は作成
 const uploadDir = './uploads';
