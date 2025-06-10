@@ -7,8 +7,8 @@ const express_1 = __importDefault(require("express"));
 const multer_1 = __importDefault(require("multer"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const prisma_1 = require("./generated/prisma");
-const prisma = new prisma_1.PrismaClient();
+const client_1 = require("./generated/prisma/client");
+const prisma = new client_1.PrismaClient();
 const app = (0, express_1.default)();
 const port = 3000;
 //Multerの設定
