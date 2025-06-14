@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function fetchAndDisplayVideos() {
         return __awaiter(this, void 0, void 0, function () {
             var response, videos, error_1;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -72,14 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         videos.forEach(function (video) {
                             var videoItem = document.createElement('div');
                             videoItem.classList.add('video_item');
-                            videoItem.addEventListener('click', function () {
-                                //動画IDをURLパラメーターとしてvideo.html渡す
-                                window.location.href = "/video.html?id=".concat(video.id);
-                            });
+                            videoItem.dataset.videoId = video.id.toString();
+                            //videoItem.addEventListener('click', () => {
+                            //動画IDをURLパラメーターとしてvideo.html渡す
+                            //    window.location.href = `/video.html?id=${video.id}`;
+                            //});
                             var titleElement = document.createElement('h3');
                             titleElement.textContent = video.title;
                             var videoPlayer = document.createElement('video');
-                            videoPlayer.src = video.file_path;
+                            videoPlayer.src = "".concat(video.file_path);
                             videoPlayer.controls = true;
                             videoPlayer.width = 320;
                             videoPlayer.height = 240;
@@ -92,6 +94,54 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                             videoItem.appendChild(titleElement);
                             videoItem.appendChild(videoPlayer);
+                            // 削除ボタンの追加とロジック
+                            var deleteButton = document.createElement('button');
+                            deleteButton.textContent = '削除';
+                            deleteButton.className = 'delete_video_btn'; // 後でイベントリスナーで識別
+                            deleteButton.dataset.videoId = video.id.toString(); // ボタンにも動画IDを持たせる
+                            deleteButton.addEventListener('click', function (event) { return __awaiter(_this, void 0, void 0, function () {
+                                var videoIdToDelete, deleteResponse, errorData, successData, error_2;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            event.stopPropagation(); // 重要: 親要素のクリックイベント(もしあれば)発火しないようにする
+                                            videoIdToDelete = deleteButton.dataset.videoId;
+                                            if (!confirm("\u672C\u5F53\u306B\u3053\u306E\u52D5\u753B(ID: ".concat(videoIdToDelete, ")\u3092\u524A\u9664\u3057\u307E\u3059\u304B?"))) {
+                                                return [2 /*return*/]; // キャンセルされたら処理を中断
+                                            }
+                                            _a.label = 1;
+                                        case 1:
+                                            _a.trys.push([1, 7, , 8]);
+                                            return [4 /*yield*/, fetch("/videos/".concat(videoIdToDelete), {
+                                                    method: 'DELETE',
+                                                })];
+                                        case 2:
+                                            deleteResponse = _a.sent();
+                                            if (!!deleteResponse.ok) return [3 /*break*/, 4];
+                                            return [4 /*yield*/, deleteResponse.json()];
+                                        case 3:
+                                            errorData = _a.sent();
+                                            throw new Error(errorData.message || '動画の削除に失敗しました!');
+                                        case 4: return [4 /*yield*/, deleteResponse.json()];
+                                        case 5:
+                                            successData = _a.sent();
+                                            alert(successData.message || '動画が正常に削除されました!');
+                                            //削除成功後,動画リストを再読み込みしてUIを更新
+                                            return [4 /*yield*/, fetchAndDisplayVideos()];
+                                        case 6:
+                                            //削除成功後,動画リストを再読み込みしてUIを更新
+                                            _a.sent(); // リスト全体を再ロード
+                                            return [3 /*break*/, 8];
+                                        case 7:
+                                            error_2 = _a.sent();
+                                            console.error('動画削除エラー:', error_2);
+                                            alert("\u52D5\u753B\u306E\u524A\u9664\u4E2D\u306B\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3057\u307E\u3057\u305F: ".concat(error_2.message || '不明なエラー'));
+                                            return [3 /*break*/, 8];
+                                        case 8: return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                            videoItem.appendChild(deleteButton);
                             videoListContainer.appendChild(videoItem);
                         });
                         return [3 /*break*/, 5];
@@ -110,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //動画アップロードフォームの処理
     if (uploadForm && uploadStatus) {
         uploadForm.addEventListener('submit', function (event) { return __awaiter(_this, void 0, void 0, function () {
-            var formData, response, result, errorText, error_2;
+            var formData, response, result, errorText, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -142,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         _a.label = 6;
                     case 6: return [3 /*break*/, 8];
                     case 7:
-                        error_2 = _a.sent();
-                        uploadStatus.textContent = "Upload failed: ".concat(error_2.message);
+                        error_3 = _a.sent();
+                        uploadStatus.textContent = "Upload failed: ".concat(error_3.message);
                         return [3 /*break*/, 8];
                     case 8: return [2 /*return*/];
                 }
