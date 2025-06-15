@@ -9,10 +9,10 @@ datasource db {
 }
 
 model Video {
-  id            Int      @id @default(autoincrement())
+  id            Int @id @default(autoincrement())
   title         String
   description   String?
   file_path     String
   original_name String
-  upload_date   DateTime @default(now())
+  upload_date DateTime @default(now())
 }

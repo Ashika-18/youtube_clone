@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 videoItem.classList.add('video_item');
                 videoItem.dataset.videoId = video.id.toString();
 
-                //videoItem.addEventListener('click', () => {
+                videoItem.addEventListener('click', () => {
                     //動画IDをURLパラメーターとしてvideo.html渡す
-                //    window.location.href = `/video.html?id=${video.id}`;
-                //});
+                    window.location.href = `/video.html?id=${video.id}`;
+                });
 
                 const titleElement = document.createElement('h3');
                 titleElement.textContent = video.title;
@@ -83,8 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const errorData = await deleteResponse.json();
                             throw new Error(errorData.message || '動画の削除に失敗しました!');
                         }
-                        const successData = await deleteResponse.json();
-                        alert(successData.message || '動画が正常に削除されました!');
+                        alert('動画が正常に削除されました!');
 
                         //削除成功後,動画リストを再読み込みしてUIを更新
                         await fetchAndDisplayVideos();// リスト全体を再ロード

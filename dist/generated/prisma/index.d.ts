@@ -3,7 +3,7 @@
  * Client
 **/
 
-import * as runtime from './runtime/library.js';
+import * as runtime from './runtime/library';
 import $Types = runtime.Types // general types
 import $Public = runtime.Types.Public
 import $Utils = runtime.Types.Utils
@@ -21,7 +21,7 @@ export type Video = $Result.DefaultSelection<Prisma.$VideoPayload>
 
 /**
  * ##  Prisma Client ʲˢ
- *
+ * 
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
@@ -30,19 +30,19 @@ export type Video = $Result.DefaultSelection<Prisma.$VideoPayload>
  * const videos = await prisma.video.findMany()
  * ```
  *
- *
+ * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
  */
 export class PrismaClient<
-  ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
+  U = 'log' extends keyof T ? T['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<T['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
 
     /**
    * ##  Prisma Client ʲˢ
-   *
+   * 
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
@@ -51,12 +51,12 @@ export class PrismaClient<
    * const videos = await prisma.video.findMany()
    * ```
    *
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
    */
 
-  constructor(optionsArg ?: Prisma.Subset<ClientOptions, Prisma.PrismaClientOptions>);
-  $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): PrismaClient;
+  constructor(optionsArg ?: Prisma.Subset<T, Prisma.PrismaClientOptions>);
+  $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): void;
 
   /**
    * Connect with the database
@@ -81,7 +81,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$executeRaw`UPDATE User SET cool = ${true} WHERE email = ${'user@email.com'};`
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
@@ -93,7 +93,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$executeRawUnsafe('UPDATE User SET cool = $1 WHERE email = $2 ;', true, 'user@email.com')
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
@@ -104,7 +104,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$queryRaw`SELECT * FROM User WHERE id = ${1} OR email = ${'user@email.com'};`
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
@@ -116,11 +116,10 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$queryRawUnsafe('SELECT * FROM User WHERE id = $1 OR email = $2;', 1, 'user@email.com')
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
-
 
   /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
@@ -140,9 +139,7 @@ export class PrismaClient<
   $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => $Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<R>
 
 
-  $extends: $Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<ClientOptions>, ExtArgs, $Utils.Call<Prisma.TypeMapCb<ClientOptions>, {
-    extArgs: ExtArgs
-  }>>
+  $extends: $Extensions.ExtendsHook<'extends', Prisma.TypeMapCb, ExtArgs>
 
       /**
    * `prisma.video`: Exposes CRUD operations for the **Video** model.
@@ -152,7 +149,7 @@ export class PrismaClient<
     * const videos = await prisma.video.findMany()
     * ```
     */
-  get video(): Prisma.VideoDelegate<ExtArgs, ClientOptions>;
+  get video(): Prisma.VideoDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -173,6 +170,7 @@ export namespace Prisma {
   export import PrismaClientRustPanicError = runtime.PrismaClientRustPanicError
   export import PrismaClientInitializationError = runtime.PrismaClientInitializationError
   export import PrismaClientValidationError = runtime.PrismaClientValidationError
+  export import NotFoundError = runtime.NotFoundError
 
   /**
    * Re-export of sql-template-tag
@@ -183,8 +181,6 @@ export namespace Prisma {
   export import raw = runtime.raw
   export import Sql = runtime.Sql
 
-
-
   /**
    * Decimal.js
    */
@@ -193,7 +189,7 @@ export namespace Prisma {
   export type DecimalJsLike = runtime.DecimalJsLike
 
   /**
-   * Metrics
+   * Metrics 
    */
   export type Metrics = runtime.Metrics
   export type Metric<T> = runtime.Metric<T>
@@ -211,38 +207,76 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.8.2
-   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+   * Prisma Client JS version: 5.7.1
+   * Query Engine version: 0ca5ccbcfa6bdc81c003cf549abe4269f59c41e5
    */
   export type PrismaVersion = {
     client: string
   }
 
-  export const prismaVersion: PrismaVersion
+  export const prismaVersion: PrismaVersion 
 
   /**
    * Utility Types
    */
 
+  /**
+   * From https://github.com/sindresorhus/type-fest/
+   * Matches a JSON object.
+   * This type can be useful to enforce some input to be JSON-compatible or as a super-type to be extended from. 
+   */
+  export type JsonObject = {[Key in string]?: JsonValue}
 
-  export import JsonObject = runtime.JsonObject
-  export import JsonArray = runtime.JsonArray
-  export import JsonValue = runtime.JsonValue
-  export import InputJsonObject = runtime.InputJsonObject
-  export import InputJsonArray = runtime.InputJsonArray
-  export import InputJsonValue = runtime.InputJsonValue
+  /**
+   * From https://github.com/sindresorhus/type-fest/
+   * Matches a JSON array.
+   */
+  export interface JsonArray extends Array<JsonValue> {}
+
+  /**
+   * From https://github.com/sindresorhus/type-fest/
+   * Matches any valid JSON value.
+   */
+  export type JsonValue = string | number | boolean | JsonObject | JsonArray | null
+
+  /**
+   * Matches a JSON object.
+   * Unlike `JsonObject`, this type allows undefined and read-only properties.
+   */
+  export type InputJsonObject = {readonly [Key in string]?: InputJsonValue | null}
+
+  /**
+   * Matches a JSON array.
+   * Unlike `JsonArray`, readonly arrays are assignable to this type.
+   */
+  export interface InputJsonArray extends ReadonlyArray<InputJsonValue | null> {}
+
+  /**
+   * Matches any valid value that can be used as an input for operations like
+   * create and update as the value of a JSON field. Unlike `JsonValue`, this
+   * type allows read-only arrays and read-only object properties and disallows
+   * `null` at the top level.
+   *
+   * `null` cannot be used as the value of a JSON field because its meaning
+   * would be ambiguous. Use `Prisma.JsonNull` to store the JSON null value or
+   * `Prisma.DbNull` to clear the JSON value and set the field to the database
+   * NULL value instead.
+   *
+   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+   */
+  export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray | { toJSON(): unknown }
 
   /**
    * Types of the values used to represent different kinds of `null` values when working with JSON fields.
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   namespace NullTypes {
     /**
     * Type of `Prisma.DbNull`.
-    *
+    * 
     * You cannot use other instances of this class. Please use the `Prisma.DbNull` value.
-    *
+    * 
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class DbNull {
@@ -252,9 +286,9 @@ export namespace Prisma {
 
     /**
     * Type of `Prisma.JsonNull`.
-    *
+    * 
     * You cannot use other instances of this class. Please use the `Prisma.JsonNull` value.
-    *
+    * 
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class JsonNull {
@@ -264,9 +298,9 @@ export namespace Prisma {
 
     /**
     * Type of `Prisma.AnyNull`.
-    *
+    * 
     * You cannot use other instances of this class. Please use the `Prisma.AnyNull` value.
-    *
+    * 
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class AnyNull {
@@ -277,21 +311,21 @@ export namespace Prisma {
 
   /**
    * Helper for filtering JSON entries that have `null` on the database (empty on the db)
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const DbNull: NullTypes.DbNull
 
   /**
    * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const JsonNull: NullTypes.JsonNull
 
   /**
    * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const AnyNull: NullTypes.AnyNull
@@ -299,11 +333,6 @@ export namespace Prisma {
   type SelectAndInclude = {
     select: any
     include: any
-  }
-
-  type SelectAndOmit = {
-    select: any
-    omit: any
   }
 
   /**
@@ -354,9 +383,7 @@ export namespace Prisma {
   } &
     (T extends SelectAndInclude
       ? 'Please either choose `select` or `include`.'
-      : T extends SelectAndOmit
-        ? 'Please either choose `select` or `omit`.'
-        : {})
+      : {})
 
   /**
    * Subset + Intersection
@@ -479,7 +506,7 @@ export namespace Prisma {
   type AtLeast<O extends object, K extends string> = NoExpand<
     O extends unknown
     ? | (K extends keyof O ? { [P in K]: O[P] } & O : O)
-      | {[P in keyof O as P extends K ? P : never]-?: O[P]} & O
+      | {[P in keyof O as P extends K ? K : never]-?: O[P]} & O
     : never>;
 
   type _Strict<U, _U = U> = U extends unknown ? U & OptionalFlat<_Record<Exclude<Keys<_U>, keyof U>, never>> : never;
@@ -603,89 +630,79 @@ export namespace Prisma {
     db?: Datasource
   }
 
-  interface TypeMapCb<ClientOptions = {}> extends $Utils.Fn<{extArgs: $Extensions.InternalArgs }, $Utils.Record<string, any>> {
-    returns: Prisma.TypeMap<this['params']['extArgs'], ClientOptions extends { omit: infer OmitOptions } ? OmitOptions : {}>
+
+  interface TypeMapCb extends $Utils.Fn<{extArgs: $Extensions.InternalArgs}, $Utils.Record<string, any>> {
+    returns: Prisma.TypeMap<this['params']['extArgs']>
   }
 
-  export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> = {
-    globalOmitOptions: {
-      omit: GlobalOmitOptions
-    }
+  export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: "video"
+      modelProps: 'video'
       txIsolationLevel: Prisma.TransactionIsolationLevel
-    }
+    },
     model: {
       Video: {
         payload: Prisma.$VideoPayload<ExtArgs>
         fields: Prisma.VideoFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.VideoFindUniqueArgs<ExtArgs>
+            args: Prisma.VideoFindUniqueArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.VideoFindUniqueOrThrowArgs<ExtArgs>
+            args: Prisma.VideoFindUniqueOrThrowArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload>
           }
           findFirst: {
-            args: Prisma.VideoFindFirstArgs<ExtArgs>
+            args: Prisma.VideoFindFirstArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.VideoFindFirstOrThrowArgs<ExtArgs>
+            args: Prisma.VideoFindFirstOrThrowArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload>
           }
           findMany: {
-            args: Prisma.VideoFindManyArgs<ExtArgs>
+            args: Prisma.VideoFindManyArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload>[]
           }
           create: {
-            args: Prisma.VideoCreateArgs<ExtArgs>
+            args: Prisma.VideoCreateArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload>
           }
           createMany: {
-            args: Prisma.VideoCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.VideoCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VideoPayload>[]
+            args: Prisma.VideoCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.VideoDeleteArgs<ExtArgs>
+            args: Prisma.VideoDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload>
           }
           update: {
-            args: Prisma.VideoUpdateArgs<ExtArgs>
+            args: Prisma.VideoUpdateArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload>
           }
           deleteMany: {
-            args: Prisma.VideoDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.VideoDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.VideoUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.VideoUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VideoPayload>[]
+            args: Prisma.VideoUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.VideoUpsertArgs<ExtArgs>
+            args: Prisma.VideoUpsertArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$VideoPayload>
           }
           aggregate: {
-            args: Prisma.VideoAggregateArgs<ExtArgs>
+            args: Prisma.VideoAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateVideo>
           }
           groupBy: {
-            args: Prisma.VideoGroupByArgs<ExtArgs>
+            args: Prisma.VideoGroupByArgs<ExtArgs>,
             result: $Utils.Optional<VideoGroupByOutputType>[]
           }
           count: {
-            args: Prisma.VideoCountArgs<ExtArgs>
+            args: Prisma.VideoCountArgs<ExtArgs>,
             result: $Utils.Optional<VideoCountAggregateOutputType> | number
           }
         }
@@ -695,15 +712,11 @@ export namespace Prisma {
     other: {
       payload: any
       operations: {
-        $executeRaw: {
-          args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
-          result: any
-        }
         $executeRawUnsafe: {
           args: [query: string, ...values: any[]],
           result: any
         }
-        $queryRaw: {
+        $executeRaw: {
           args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
           result: any
         }
@@ -711,10 +724,14 @@ export namespace Prisma {
           args: [query: string, ...values: any[]],
           result: any
         }
+        $queryRaw: {
+          args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
+          result: any
+        }
       }
     }
   }
-  export const defineExtension: $Extensions.ExtendsHook<"define", Prisma.TypeMapCb, $Extensions.DefaultArgs>
+  export const defineExtension: $Extensions.ExtendsHook<'define', Prisma.TypeMapCb, $Extensions.DefaultArgs>
   export type DefaultPrismaClient = PrismaClient
   export type ErrorFormat = 'pretty' | 'colorless' | 'minimal'
   export interface PrismaClientOptions {
@@ -747,34 +764,6 @@ export namespace Prisma {
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
     log?: (LogLevel | LogDefinition)[]
-    /**
-     * The default values for transactionOptions
-     * maxWait ?= 2000
-     * timeout ?= 5000
-     */
-    transactionOptions?: {
-      maxWait?: number
-      timeout?: number
-      isolationLevel?: Prisma.TransactionIsolationLevel
-    }
-    /**
-     * Global configuration for omitting model fields by default.
-     * 
-     * @example
-     * ```
-     * const prisma = new PrismaClient({
-     *   omit: {
-     *     user: {
-     *       password: true
-     *     }
-     *   }
-     * })
-     * ```
-     */
-    omit?: Prisma.GlobalOmitConfig
-  }
-  export type GlobalOmitConfig = {
-    video?: VideoOmit
   }
 
   /* Types for Logging */
@@ -813,10 +802,8 @@ export namespace Prisma {
     | 'findFirstOrThrow'
     | 'create'
     | 'createMany'
-    | 'createManyAndReturn'
     | 'update'
     | 'updateMany'
-    | 'updateManyAndReturn'
     | 'upsert'
     | 'delete'
     | 'deleteMany'
@@ -1077,24 +1064,6 @@ export namespace Prisma {
     upload_date?: boolean
   }, ExtArgs["result"]["video"]>
 
-  export type VideoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    file_path?: boolean
-    original_name?: boolean
-    upload_date?: boolean
-  }, ExtArgs["result"]["video"]>
-
-  export type VideoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    file_path?: boolean
-    original_name?: boolean
-    upload_date?: boolean
-  }, ExtArgs["result"]["video"]>
-
   export type VideoSelectScalar = {
     id?: boolean
     title?: boolean
@@ -1104,7 +1073,6 @@ export namespace Prisma {
     upload_date?: boolean
   }
 
-  export type VideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "file_path" | "original_name" | "upload_date", ExtArgs["result"]["video"]>
 
   export type $VideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Video"
@@ -1120,14 +1088,15 @@ export namespace Prisma {
     composites: {}
   }
 
+
   type VideoGetPayload<S extends boolean | null | undefined | VideoDefaultArgs> = $Result.GetResult<Prisma.$VideoPayload, S>
 
-  type VideoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<VideoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type VideoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<VideoFindManyArgs, 'select' | 'include' | 'distinct' > & {
       select?: VideoCountAggregateInputType | true
     }
 
-  export interface VideoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface VideoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Video'], meta: { name: 'Video' } }
     /**
      * Find zero or one Video that matches the filter.
@@ -1139,12 +1108,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends VideoFindUniqueArgs>(args: SelectSubset<T, VideoFindUniqueArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends VideoFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, VideoFindUniqueArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Video that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one Video that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {VideoFindUniqueOrThrowArgs} args - Arguments to find a Video
      * @example
      * // Get one Video
@@ -1153,8 +1124,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends VideoFindUniqueOrThrowArgs>(args: SelectSubset<T, VideoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends VideoFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, VideoFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
 
     /**
      * Find the first Video that matches the filter.
@@ -1168,8 +1141,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends VideoFindFirstArgs>(args?: SelectSubset<T, VideoFindFirstArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends VideoFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, VideoFindFirstArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
 
     /**
      * Find the first Video that matches the filter or
@@ -1184,14 +1159,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends VideoFindFirstOrThrowArgs>(args?: SelectSubset<T, VideoFindFirstOrThrowArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends VideoFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, VideoFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
 
     /**
      * Find zero or more Videos that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {VideoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {VideoFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Videos
      * const videos = await prisma.video.findMany()
@@ -1202,8 +1179,10 @@ export namespace Prisma {
      * // Only select the `id`
      * const videoWithIdOnly = await prisma.video.findMany({ select: { id: true } })
      * 
-     */
-    findMany<T extends VideoFindManyArgs>(args?: SelectSubset<T, VideoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends VideoFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, VideoFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'findMany'>>
 
     /**
      * Create a Video.
@@ -1216,46 +1195,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends VideoCreateArgs>(args: SelectSubset<T, VideoCreateArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends VideoCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, VideoCreateArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
 
     /**
      * Create many Videos.
-     * @param {VideoCreateManyArgs} args - Arguments to create many Videos.
-     * @example
-     * // Create many Videos
-     * const video = await prisma.video.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {VideoCreateManyArgs} args - Arguments to create many Videos.
+     *     @example
+     *     // Create many Videos
+     *     const video = await prisma.video.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends VideoCreateManyArgs>(args?: SelectSubset<T, VideoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Videos and returns the data saved in the database.
-     * @param {VideoCreateManyAndReturnArgs} args - Arguments to create many Videos.
-     * @example
-     * // Create many Videos
-     * const video = await prisma.video.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Videos and only return the `id`
-     * const videoWithIdOnly = await prisma.video.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends VideoCreateManyAndReturnArgs>(args?: SelectSubset<T, VideoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends VideoCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, VideoCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Video.
@@ -1268,8 +1227,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends VideoDeleteArgs>(args: SelectSubset<T, VideoDeleteArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends VideoDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, VideoDeleteArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
 
     /**
      * Update one Video.
@@ -1285,8 +1246,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends VideoUpdateArgs>(args: SelectSubset<T, VideoUpdateArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends VideoUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, VideoUpdateArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
 
     /**
      * Delete zero or more Videos.
@@ -1299,8 +1262,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends VideoDeleteManyArgs>(args?: SelectSubset<T, VideoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends VideoDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, VideoDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Videos.
@@ -1318,38 +1283,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends VideoUpdateManyArgs>(args: SelectSubset<T, VideoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Videos and returns the data updated in the database.
-     * @param {VideoUpdateManyAndReturnArgs} args - Arguments to update many Videos.
-     * @example
-     * // Update many Videos
-     * const video = await prisma.video.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Videos and only return the `id`
-     * const videoWithIdOnly = await prisma.video.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends VideoUpdateManyAndReturnArgs>(args: SelectSubset<T, VideoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends VideoUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, VideoUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Video.
@@ -1367,9 +1304,10 @@ export namespace Prisma {
      *     // ... the filter for the Video we want to update
      *   }
      * })
-     */
-    upsert<T extends VideoUpsertArgs>(args: SelectSubset<T, VideoUpsertArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends VideoUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, VideoUpsertArgs<ExtArgs>>
+    ): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
 
     /**
      * Count the number of Videos.
@@ -1508,36 +1446,37 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__VideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
+  export interface Prisma__VideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
   }
-
 
 
 
   /**
    * Fields of the Video model
-   */
+   */ 
   interface VideoFieldRefs {
     readonly id: FieldRef<"Video", 'Int'>
     readonly title: FieldRef<"Video", 'String'>
@@ -1549,6 +1488,7 @@ export namespace Prisma {
     
 
   // Custom InputTypes
+
   /**
    * Video findUnique
    */
@@ -1558,14 +1498,11 @@ export namespace Prisma {
      */
     select?: VideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
      * Filter, which Video to fetch.
      */
     where: VideoWhereUniqueInput
   }
+
 
   /**
    * Video findUniqueOrThrow
@@ -1576,14 +1513,11 @@ export namespace Prisma {
      */
     select?: VideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
      * Filter, which Video to fetch.
      */
     where: VideoWhereUniqueInput
   }
+
 
   /**
    * Video findFirst
@@ -1594,10 +1528,6 @@ export namespace Prisma {
      */
     select?: VideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
      * Filter, which Video to fetch.
      */
     where?: VideoWhereInput
@@ -1632,6 +1562,7 @@ export namespace Prisma {
      */
     distinct?: VideoScalarFieldEnum | VideoScalarFieldEnum[]
   }
+
 
   /**
    * Video findFirstOrThrow
@@ -1642,10 +1573,6 @@ export namespace Prisma {
      */
     select?: VideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
      * Filter, which Video to fetch.
      */
     where?: VideoWhereInput
@@ -1681,6 +1608,7 @@ export namespace Prisma {
     distinct?: VideoScalarFieldEnum | VideoScalarFieldEnum[]
   }
 
+
   /**
    * Video findMany
    */
@@ -1689,10 +1617,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the Video
      */
     select?: VideoSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
     /**
      * Filter, which Videos to fetch.
      */
@@ -1724,6 +1648,7 @@ export namespace Prisma {
     distinct?: VideoScalarFieldEnum | VideoScalarFieldEnum[]
   }
 
+
   /**
    * Video create
    */
@@ -1733,14 +1658,11 @@ export namespace Prisma {
      */
     select?: VideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
      * The data needed to create a Video.
      */
     data: XOR<VideoCreateInput, VideoUncheckedCreateInput>
   }
+
 
   /**
    * Video createMany
@@ -1753,24 +1675,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  /**
-   * Video createManyAndReturn
-   */
-  export type VideoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Video
-     */
-    select?: VideoSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
-     * The data used to create many Videos.
-     */
-    data: VideoCreateManyInput | VideoCreateManyInput[]
-    skipDuplicates?: boolean
-  }
 
   /**
    * Video update
@@ -1781,10 +1685,6 @@ export namespace Prisma {
      */
     select?: VideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
      * The data needed to update a Video.
      */
     data: XOR<VideoUpdateInput, VideoUncheckedUpdateInput>
@@ -1793,6 +1693,7 @@ export namespace Prisma {
      */
     where: VideoWhereUniqueInput
   }
+
 
   /**
    * Video updateMany
@@ -1806,37 +1707,8 @@ export namespace Prisma {
      * Filter which Videos to update
      */
     where?: VideoWhereInput
-    /**
-     * Limit how many Videos to update.
-     */
-    limit?: number
   }
 
-  /**
-   * Video updateManyAndReturn
-   */
-  export type VideoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Video
-     */
-    select?: VideoSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
-     * The data used to update Videos.
-     */
-    data: XOR<VideoUpdateManyMutationInput, VideoUncheckedUpdateManyInput>
-    /**
-     * Filter which Videos to update
-     */
-    where?: VideoWhereInput
-    /**
-     * Limit how many Videos to update.
-     */
-    limit?: number
-  }
 
   /**
    * Video upsert
@@ -1846,10 +1718,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the Video
      */
     select?: VideoSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
     /**
      * The filter to search for the Video to update in case it exists.
      */
@@ -1864,6 +1732,7 @@ export namespace Prisma {
     update: XOR<VideoUpdateInput, VideoUncheckedUpdateInput>
   }
 
+
   /**
    * Video delete
    */
@@ -1873,14 +1742,11 @@ export namespace Prisma {
      */
     select?: VideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
-    /**
      * Filter which Video to delete.
      */
     where: VideoWhereUniqueInput
   }
+
 
   /**
    * Video deleteMany
@@ -1890,11 +1756,8 @@ export namespace Prisma {
      * Filter which Videos to delete
      */
     where?: VideoWhereInput
-    /**
-     * Limit how many Videos to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * Video without action
@@ -1904,11 +1767,8 @@ export namespace Prisma {
      * Select specific fields to fetch from the Video
      */
     select?: VideoSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Video
-     */
-    omit?: VideoOmit<ExtArgs> | null
   }
+
 
 
   /**
@@ -1962,7 +1822,7 @@ export namespace Prisma {
 
 
   /**
-   * Field references
+   * Field references 
    */
 
 
@@ -2459,6 +2319,14 @@ export namespace Prisma {
   }
 
 
+
+  /**
+   * Aliases for legacy arg types
+   */
+    /**
+     * @deprecated Use VideoDefaultArgs instead
+     */
+    export type VideoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = VideoDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

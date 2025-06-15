@@ -149,7 +149,7 @@ app.delete('/videos/:id', (async (req: express.Request, res: express.Response) =
         await prisma.video.delete({
             where: { id: videoId },
         });
-        res.status(200).json({ message: 'Video deleted successfully.'});
+        res.status(204).send();
 
     } catch (error) {
         console.error(`Error deleting video with ID ${videoId}:`, error);
