@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "baseUrl": "./src",
     "paths": {
-      "generated/prisma/client": ["./src/generated/prisma/client"]
+      "generated/prisma/client": ["./generated/prisma/client"]
     }
   },
   "include": ["src/**/*.ts"],
