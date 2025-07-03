@@ -15,4 +15,16 @@ model Video {
   file_path     String
   original_name String
   upload_date DateTime @default(now())
+  userId        String? //動画をアップロードしたユーザーのID(オプションにするか必須にするか検討)
+  user          User?  @relation(fields: [userId], references: [id]) // User モデルへのリレーション 
+}
+
+model User {
+  id       String    @id @default(uuid()) // ユニークなユーザーID 
+  username String    @unique //ユーザー名(ユニークな識別子)
+  email    String    @unique //メールアドレス(ユニークな識別子)
+  password String    // ハッシュ化されたパス 
+  createdAt DateTime @default(now()) //アカウント作成日時
+  updatedAt DateTime @updatedAt //最終更新日時
+  videos    Video[]
 }

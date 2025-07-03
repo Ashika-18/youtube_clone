@@ -113,7 +113,17 @@ exports.Prisma.VideoScalarFieldEnum = {
   description: 'description',
   file_path: 'file_path',
   original_name: 'original_name',
-  upload_date: 'upload_date'
+  upload_date: 'upload_date',
+  userId: 'userId'
+};
+
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  username: 'username',
+  email: 'email',
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -133,7 +143,8 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  Video: 'Video'
+  Video: 'Video',
+  User: 'User'
 };
 
 /**
