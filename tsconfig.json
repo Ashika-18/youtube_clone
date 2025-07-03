@@ -8,9 +8,9 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "generated/prisma/client": ["./generated/prisma/client"]
+      "generated/prisma/client": ["./src/generated/prisma"]
     }
   },
   "include": ["src/**/*.ts"],
