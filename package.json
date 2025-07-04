@@ -32,7 +32,7 @@
   },
   "type": "commonjs",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "overrides": {
   "readable-stream":"^4.0.0",
