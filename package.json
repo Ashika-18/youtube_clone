@@ -35,5 +35,7 @@
     "node": "20.x"
   },
   "overrides": {
-  "readable-stream":"^4.0.0"}
+  "readable-stream":"^4.0.0",
+  "concat-stream": "^2.0.0"
+}
 }
