@@ -9,21 +9,21 @@ datasource db {
 }
 
 model Video {
-  id            Int @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   title         String
   description   String?
   file_path     String
   original_name String
-  upload_date DateTime @default(now())
+  upload_date   DateTime @default(now())
   userId        String? //動画をアップロードしたユーザーのID(オプションにするか必須にするか検討)
-  user          User?  @relation(fields: [userId], references: [id]) // User モデルへのリレーション 
+  user          User?    @relation(fields: [userId], references: [id]) // User モデルへのリレーション 
 }
 
 model User {
-  id       String    @id @default(uuid()) // ユニークなユーザーID 
-  username String    @unique //ユーザー名(ユニークな識別子)
-  email    String    @unique //メールアドレス(ユニークな識別子)
-  password String    // ハッシュ化されたパス 
+  id        String   @id @default(uuid()) // ユニークなユーザーID 
+  username  String   @unique //ユーザー名(ユニークな識別子)
+  email     String   @unique //メールアドレス(ユニークな識別子)
+  password  String // ハッシュ化されたパス 
   createdAt DateTime @default(now()) //アカウント作成日時
   updatedAt DateTime @updatedAt //最終更新日時
   videos    Video[]

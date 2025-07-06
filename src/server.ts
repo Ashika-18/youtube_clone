@@ -3,7 +3,7 @@ import busboy from 'busboy';
 import fsSync from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { PrismaClient } from '../dist/generated/prisma';
+import { PrismaClient } from './generated/prisma';
 
 const prisma = new PrismaClient();
 const app = express();
