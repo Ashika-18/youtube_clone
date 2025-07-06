@@ -36,12 +36,13 @@ app.post('/upload', async (req: express.Request, res: express.Response) => {
         // fieldname: フォームフィールド名 (例: 'video')
         // info: { filename: '元のファイル名', encoding: '...', mimeType: '...' }
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        originalname = info.filename;
+        const originalname = info.filename;
         const filename = `${fieldname}-${uniqueSuffix}${path.extname(originalname)}`;
+        const serverSavePath = path.join(__dirname, '..', 'uploads', filename);// サーバー内部で実際にファイルを保存する絶対パス
 
         //保存先のパスをuploadsディレクトリ内に設定
         const saveTo = path.join(__dirname, '..', 'uploads', filename);
-        filePath = saveTo;// データベースに保存するパス
+        filePath = `/uploads/${filename}`;// データベースに保存するパス
 
         // ディレクトリが存在しない場合は作成
         const uploadDir = path.dirname(saveTo);
@@ -50,10 +51,10 @@ app.post('/upload', async (req: express.Request, res: express.Response) => {
         }
 
         // ファイルをストリームとして保存
-        file.pipe(fsSync.createWriteStream(saveTo));
+        file.pipe(fsSync.createWriteStream(serverSavePath));
 
         file.on('end', () => {
-            console.log(`File[${fieldname}] uploaded to ${saveTo}`);
+            console.log(`File[${fieldname}] uploaded to ${serverSavePath}`);
         });
 
         file.on('error', (err) => {
