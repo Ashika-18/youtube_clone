@@ -1,5 +1,5 @@
 import express from 'express';
-import multer from 'multer';
+import busboy from 'busboy';
 import fsSync from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
@@ -8,20 +8,6 @@ import { PrismaClient } from '../dist/generated/prisma';
 const prisma = new PrismaClient();
 const app = express();
 const port = 3000;
-
-//Multerの設定
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    },
-  });
-  
-
-const upload = multer({ storage: storage });
 
 //JSONのbodyをパースするためのミドルウェア
 app.use(express.json());
@@ -36,32 +22,87 @@ app.get('/', (req: express.Request, res: express.Response) => {
 });
 
 //動画アップロードのエンドポイント (Prisma版)
-app.post('/upload', upload.single('video'), (async (req: express.Request, res: express.Response) => {
-    if (!req.file) {
-        res.status(400).send('No video file uploaded.');
-        return;
-    }
-    const { title, description } = req.body;
-    const filePath = req.file.path;
-    const originalname = req.file.originalname;
+app.post('/upload', async (req: express.Request, res: express.Response) => {
+    //busboyのインスタンスを作成
+    const bb = busboy({ headers: req.headers });
 
-    try {
-        const videoData = {
-            title: title as string,
-            description: req.body.description === undefined ? null : req.body.description as string,
-            file_path: filePath,
-            original_name: originalname,
-            upload_date: new Date(),
-        };
-        const video = await prisma.video.create({
-            data: videoData,
+    let title: string | undefined;
+    let description: string | undefined | null = null;
+    let filePath: string | undefined;
+    let originalname: string | undefined;
+
+    //ファイルを受け取った時の処理
+    bb.on('file', (fieldname, file, info) => {
+        // fieldname: フォームフィールド名 (例: 'video')
+        // info: { filename: '元のファイル名', encoding: '...', mimeType: '...' }
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        originalname = info.filename;
+        const filename = `${fieldname}-${uniqueSuffix}${path.extname(originalname)}`;
+
+        //保存先のパスをuploadsディレクトリ内に設定
+        const saveTo = path.join(__dirname, '..', 'uploads', filename);
+        filePath = saveTo;// データベースに保存するパス
+
+        // ディレクトリが存在しない場合は作成
+        const uploadDir = path.dirname(saveTo);
+        if (!fsSync.existsSync(uploadDir)) {
+            fsSync.mkdirSync(uploadDir, { recursive: true });
+        }
+
+        // ファイルをストリームとして保存
+        file.pipe(fsSync.createWriteStream(saveTo));
+
+        file.on('end', () => {
+            console.log(`File[${fieldname}] uploaded to ${saveTo}`);
         });
-        res.status(201).json({ message: 'Video uploaded successfully!', videoId: video.id });
-    } catch (error) {
-        console.error('Error uploading video:', error);
-        res.status(500).send('Error uploading video to database.');
-    }
-}) as express.RequestHandler);
+
+        file.on('error', (err) => {
+            console.error(`Error during file stream for ${fieldname}:`, err);
+            // エラーハンドリング
+        });
+    });
+
+    // テキストフィールドを受け取った時の処理
+    bb.on('field', (fieldname, val) => {
+        if (fieldname === 'title') {
+            title = val;
+        } else if (fieldname === 'description') {
+            description = val;
+        }
+    });
+
+    // 全てのファイルとフィールドの解析が完了した時の処理
+    bb.on('finish', async () => {
+        console.log('Done parsing form with Busboy!');
+        if (!title || !filePath || !originalname) {
+            res.status(400).send('Required fields (title, video, file) are missing.');
+            return;
+        }
+        try {
+            const videoData = {
+                title: title as string,
+                description: description, // nullの可能性があるのでそのまま渡す
+                file_path: filePath,
+                original_name: originalname,
+                upload_date: new Date(),
+            };
+            const video = await prisma.video.create({
+              data: videoData,  
+            });
+            res.status(201).json({ message: 'Video uploaded successfully!', videoId: video.id});
+        } catch (error) {
+            console.error('Error uploading video to database:', error);
+            res.status(500).send('Error uploading video to database.');
+        }
+    });
+    
+    // エラーハンドリング
+    bb.on('error', (err) => {
+        console.error('Busboy error', err);
+        res.status(500).send('Error prosessing video upload.');
+    });
+    req.pipe(bb);
+});
 
 //動画リストを取得するエンドポイント (Prisma版)
 const getVideosHandler: express.RequestHandler = async (req, res) => {
@@ -158,9 +199,9 @@ app.delete('/videos/:id', (async (req: express.Request, res: express.Response) =
 }) as express.RequestHandler);
 
 //uploads ディレクトリが存在しない場合は作成(起動時は一度だけ確認)
-const uploadDir = './uploads';
+const uploadDir = path.join(__dirname, '..', 'uploads');
 if (!fsSync.existsSync(uploadDir)) {
-    fsSync.mkdirSync(uploadDir);
+    fsSync.mkdirSync(uploadDir, {recursive: true});
 }
 
 app.listen(port, () => {
