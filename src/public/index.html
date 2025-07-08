@@ -1,0 +1,35 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Welcome to the YouTube Clone!</h1>
+    <form id="uploadForm" enctype="multipart/form-data" method="post">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description"></textarea>
+        </div>
+        <div>
+            <label for="video">Video File:</label>
+            <input type="file" id="video" name="video" accept="video/*" required>
+        </div>
+        <button type="submit">Upload</button>
+        <div id="uploadStatus"></div>
+    </form>
+
+    <hr> <h2>Uploaded Videos</h2>
+    <div id="videoList">
+
+    </div>
+    <script type="module" src="/javascripts/main.js"></script>
+</body>
+</html>

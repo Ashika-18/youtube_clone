@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     //取得した動画情報をページに表示
     videoTitleElement.textContent = video.title;
-    videoPlayerElement.src = `/${video.file_path}`;// 動画ファイルのパスと設定(サーバーの/uploadsに対応)
+    videoPlayerElement.src = window.location.origin + video.file_path;// 動画ファイルのパスと設定(サーバーの/uploadsに対応)
     videoDescriptionElement.textContent = video.description || 'No description provided.';// 説明がなければデフォルトメッセージ
     videoPlayerElement.load();
     videoPlayerElement.play();

@@ -10,10 +10,10 @@ const app = express();
 const port = 3000;
 
 //JSONのbodyをパースするためのミドルウェア
-app.use(express.json());
+//app.use(express.json());
 
 // 静的ファイルを提供するためのミドルウェア
-app.use(express.static('public'));
+app.use(express.static('dist/public'));
 
 app.use('/uploads', express.static('uploads'));
 
@@ -33,19 +33,15 @@ app.post('/upload', async (req: express.Request, res: express.Response) => {
 
     //ファイルを受け取った時の処理
     bb.on('file', (fieldname, file, info) => {
-        // fieldname: フォームフィールド名 (例: 'video')
-        // info: { filename: '元のファイル名', encoding: '...', mimeType: '...' }
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const originalname = info.filename;
+        originalname = info.filename;
         const filename = `${fieldname}-${uniqueSuffix}${path.extname(originalname)}`;
         const serverSavePath = path.join(__dirname, '..', 'uploads', filename);// サーバー内部で実際にファイルを保存する絶対パス
 
-        //保存先のパスをuploadsディレクトリ内に設定
-        const saveTo = path.join(__dirname, '..', 'uploads', filename);
         filePath = `/uploads/${filename}`;// データベースに保存するパス
 
         // ディレクトリが存在しない場合は作成
-        const uploadDir = path.dirname(saveTo);
+        const uploadDir = path.dirname(serverSavePath);
         if (!fsSync.existsSync(uploadDir)) {
             fsSync.mkdirSync(uploadDir, { recursive: true });
         }
@@ -74,11 +70,35 @@ app.post('/upload', async (req: express.Request, res: express.Response) => {
 
     // 全てのファイルとフィールドの解析が完了した時の処理
     bb.on('finish', async () => {
-        console.log('Done parsing form with Busboy!');
-        if (!title || !filePath || !originalname) {
-            res.status(400).send('Required fields (title, video, file) are missing.');
-            return;
-        }
+        console.log('Busboy finished parsing. Final values:');
+    console.log(`  Title: ${title}`);           // ★これら3つのログを追加
+    console.log(`  Description: ${description}`);
+    console.log(`  FilePath: ${filePath}`);
+    console.log(`  OriginalName: ${originalname}`); // ★これら3つのログを追加
+
+    if (!title) {
+        console.error('Error: Title is missing.'); // ★ログを追加
+    }
+    if (!filePath) {
+        console.error('Error: FilePath is missing.'); // ★ログを追加
+    }
+    if (!originalname) {
+        console.error('Error: OriginalName is missing.'); // ★ログを追加
+    }
+
+    if (!title || !filePath || !originalname) {
+        console.error('Required fields missing after Busboy finish. Sending 400.'); // ★ログを追加
+        // デバッグ情報を含めて400レスポンスを返すように変更
+        res.status(400).json({
+            message: 'Required fields (title, video, file) are missing.',
+            debug: {
+                titleReceived: !!title,       // titleが受信できたか (true/false)
+                filePathSet: !!filePath,     // filePathが設定されたか
+                originalnameSet: !!originalname // originalnameが設定されたか
+            }
+        });
+        return; // ここで処理を終了
+    }
         try {
             const videoData = {
                 title: title as string,

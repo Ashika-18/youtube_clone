@@ -13,6 +13,8 @@
       "generated/prisma/client": ["./src/generated/prisma"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": ["node_modules"]
 }
