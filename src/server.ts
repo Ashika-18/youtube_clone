@@ -225,6 +225,8 @@ if (!fsSync.existsSync(uploadDir)) {
     fsSync.mkdirSync(uploadDir, {recursive: true});
 }
 
+const PORT = 8080;
+
 app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+    console.log(`Server listening at http://localhost:${PORT}`);
 });
